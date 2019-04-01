@@ -2,10 +2,9 @@
 
 - hosts: check-mk-server
 
-  vars:
-    set: checkmd2
 
   tasks:
+
     - name: Download checkmk server via Ansible
       get_url:
         url: https://mathias-kettner.de/support/1.5.0p13/check-mk-raw-1.5.0p13_0.stretch_amd64.deb
@@ -17,20 +16,30 @@
         dest: /tmp/checkmk.deb
 
     - name: run dpkg -i
-      command: sudo dpkg -i /tmp/checkmk.deb
+      become: yes
+      command: dpkg -i /tmp/checkmk.deb
 
     - name: run apt install
-      command: sudo apt install -f
+      become: yes
+      command: apt install -f
 
     - name: remove site
-      command: sudo omd -f rm checkmd2
+      become: yes
+      command: omd -f rm checkmd2
+      ignore_errors: True
 
-#is this where the always goes? cannot be in same section as command.
     - name: create site
-      command: sudo omd create checkmd2
+      become: yes
+      command: omd create checkmd2
+      ignore_errors: True
+      register: shell_result
+    - debug:
+        var: shell_result.stdout_lines
 
     - name: run omd start
-      command: sudo omd start checkmd2
+      become: yes
+      command: omd start checkmd2
+
 
 
 
