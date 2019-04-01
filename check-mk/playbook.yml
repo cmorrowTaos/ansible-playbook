@@ -1,0 +1,37 @@
+---
+
+- hosts: check-mk-server
+
+  vars:
+    set: checkmd2
+
+  tasks:
+    - name: Download checkmk server via Ansible
+      get_url:
+        url: https://mathias-kettner.de/support/1.5.0p13/check-mk-raw-1.5.0p13_0.stretch_amd64.deb
+        dest: /tmp/checkmk.deb
+
+    - name: get agents
+      get_url:
+        url: http://35.237.119.246/checkmd2/check_mk/agents/check-mk-agent_1.5.0p13-1_all.deb
+        dest: /tmp/checkmk.deb
+
+    - name: run dpkg -i
+      command: sudo dpkg -i /tmp/checkmk.deb
+
+    - name: run apt install
+      command: sudo apt install -f
+
+    - name: remove site
+      command: sudo omd -f rm checkmd2
+
+#is this where the always goes? cannot be in same section as command.
+    - name: create site
+      command: sudo omd create checkmd2
+
+    - name: run omd start
+      command: sudo omd start checkmd2
+
+
+
+
