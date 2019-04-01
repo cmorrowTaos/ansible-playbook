@@ -1,0 +1,16 @@
+---
+
+- hosts: check-mk-server
+
+  tasks:
+      - name: Installs thefuck web server
+        become: yes
+        apt: pkg=thefuck state=installed update_cache=true
+
+      - name: Inserting a line after a pattern in Ansible example
+        lineinfile:
+          path: ~/.bashrc
+          line: |
+            eval $(thefuck --alias)
+            eval $(thefuck --alias FUCK)
+

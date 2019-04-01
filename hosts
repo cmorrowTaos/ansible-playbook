@@ -1,0 +1,5 @@
+[droplets]
+35.237.119.246 ansible_user=cmorrow
+
+[check-mk-server]
+35.237.119.246 ansible_user=cmorrow
