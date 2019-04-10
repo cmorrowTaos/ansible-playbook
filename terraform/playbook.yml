@@ -1,0 +1,13 @@
+- hosts: gcpworkstation
+  become: yes
+
+  vars:
+    ansible_ssh_private_key_file: ~/.ssh/id_rsa
+
+  tasks:
+
+    - name: Download terraform via Ansible
+      get_url:
+        url: https://releases.hashicorp.com/terraform/0.11.13/terraform_0.11.13_linux_amd64.zip
+        dest: /tmp/terraform.deb
+

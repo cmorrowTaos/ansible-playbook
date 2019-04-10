@@ -1,47 +1,40 @@
 ---
 
-- hosts: check-mk-server
+- hosts: all
+  become: true
 
   tasks:
-      - name: Installs thefuck web server
-        become: yes
-        apt: pkg=thefuck state=installed update_cache=true
+    - name: Installs thefuck web server
+      become: yes
+      apt: pkg=thefuck state=installed update_cache=true
 
-      - name: Inserting a line after a pattern in Ansible example
-        lineinfile:
-          path: ~/.bashrc
-          line: |
-            eval $(thefuck --alias)
-            eval $(thefuck --alias FUCK)
+    - name: Inserting a line after a pattern in Ansible example
+      lineinfile:
+        path: ~/.bashrc
+        line: |
+          eval $(thefuck --alias)
+          eval $(thefuck --alias FUCK)
 
-- hosts: aws
+     -name: Installs Z web server
+      become: yes
+      apt: pkg=z state=installed update_cache=true
 
-  tasks:
-      - name: Installs thefuck web server
-        become: yes
-        apt: pkg=thefuck state=installed update_cache=true
+     -name: Installs Fish
+      become: yes
+      apt: pkg=fish state=installed update_cache=true
 
-      - name: Inserting a line after a pattern in Ansible example
-        lineinfile:
-          path: ~/.bashrc
-          line: |
-            eval $(thefuck --alias)
-            eval $(thefuck --alias FUCK)
+     -name: Installs Rip Grep
+      become: yes
+      apt: pkg=ripgrep state=installed update_cache=true
 
-- hosts: saltshack
+     -name: Installs Vim
+       become: yes
+       apt: pkg=vim state=installed update_cache=true
 
-  tasks:
-      - name: Installs thefuck web server
-        become: yes
-        apt: pkg=thefuck state=installed update_cache=true
+     -name: Installs Neovim
+      become: yes
+      apt: pkg=neovim state=installed update_cache=true
 
-      - name: Inserting a line after a pattern in Ansible example
-        lineinfile:
-          path: ~/.bashrc
-          line: |
-            eval $(thefuck --alias)
-            eval $(thefuck --alias FUCK)
-
-
-
-
+     -name: Installs OMF "oh my fish"
+      become: yes
+      apt: pkg=omf state=installed update_cache=true

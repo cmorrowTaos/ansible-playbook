@@ -1,12 +1,13 @@
-- hosts: saltshack
+- hosts: aws
 
 
   vars:
-    ansible_ssh_private_key_file: ~/.ssh/id_rsa
+    ansible_ssh_private_key_file: ~/.ssh/cekey.pem
 
   tasks:
 
-    - name: Download saltshack via Ansible
+    - name: Download aws via Ansible
       get_url:
         url: https://mathias-kettner.de/support/1.5.0p13/check-mk-raw-1.5.0p13-el7-38.x86_64.rpm
         dest: /tmp/aws.deb
+
