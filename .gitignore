@@ -116,3 +116,7 @@ dmypy.json
 .pyre/
 
 tags
+
+
+# Ansible retry scripts
+*.retry
