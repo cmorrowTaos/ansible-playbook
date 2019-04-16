@@ -3,43 +3,48 @@
   become: yes
   gather_facts: False
 
+
   pre_tasks:
     - name: Install python for Ansible
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python python-simplejson)
       changed_when: False
 
   tasks:
-    - name: Installs thefuck web server
-      become: yes
-      apt: pkg=thefuck state=installed update_cache=true
+    #    - name: Installs thefuck web server
+    # become: yes
+    # apt: pkg=thefuck state=installed update_cache=true
 
-    - name: Inserting a line after a pattern in Ansible example
-      lineinfile:
-        path: ~/.bashrc
-        line: |
-          eval $(thefuck --alias)
-          eval $(thefuck --alias FUCK)
+    # - name: Inserting a line after a pattern in Ansible example
+    # lineinfile:
+    # path: ~/.bashrc
+    # line: |
+    #     eval $(thefuck --alias)
+    #     eval $(thefuck --alias FUCK)
 
-    - name: Installs Z web server
-      become: yes
-      apt: pkg=z state=installed update_cache=true
+    # - name: Installs Z web server
+    # become: yes
+    # apt: pkg=z state=installed update_cache=true
 
-    - name: Installs Fish
-      become: yes
-      apt: pkg=fish state=installed update_cache=true
+#    - name: Installs Fish
+#      become: yes
+#      apt: pkg=fish state=installed update_cache=true
 
-    - name: Installs Rip Grep
-      become: yes
-      apt: pkg=ripgrep state=installed update_cache=true
+    # - name: Installs Rip Grep
+    # become: yes
+    # apt: pkg=ripgrep state=installed update_cache=true
 
-    - name: Installs Vim
-      become: yes
-      apt: pkg=vim state=installed update_cache=true
+    # - name: Installs Vim
+    # become: yes
+    # apt: pkg=vim state=installed update_cache=true
 
-    - name: Installs Neovim
-      become: yes
-      apt: pkg=neovim state=installed update_cache=true
+    # - name: Installs Neovim
+      #become: yes
+      # apt: pkg=neovim state=installed update_cache=true
 
-    - name: Installs OMF "oh my fish"
+    - name: Installs Homesick
       become: yes
-      apt: pkg=omf state=installed update_cache=true
+      apt: pkg=homesick state=installed update_cache=true
+
+#    - name: Installs OMF "oh my fish"
+#      become: yes
+#      apt: pkg=omf state=installed update_cache=true
