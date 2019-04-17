@@ -1,0 +1,2 @@
+[all]
+35.233.240.196 ansible_user=root
