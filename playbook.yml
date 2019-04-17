@@ -6,6 +6,10 @@
 
 
   tasks:
+
+    - name: Update the apt registry
+      raw: apt update -y
+
     - name: Update CA Certs
       apt: pkg=ca-certificates state=installed update_cache=true
 
@@ -14,9 +18,6 @@
         path: tools
         state: directory
         mode: 0755
-
-    - name: Update the apt registry
-      raw: apt update -y
 
     - name: Installs Vim
       apt:
@@ -37,69 +38,63 @@
           eval $(thefuck --alias)
           eval $(thefuck --alias FUCK)
 
-    - name: Installs Z web server
-      apt:
-        pkg: z
-        state: installed
-        update_cache: true
-
     - name: Installs Z
       get_url:
         url: "https://raw.githubusercontent.com/rupa/z/master/z.sh"
         dest: "tools/z.sh"
 
     - name: Installs Fish
-      apt: pkg=fish state=installed update_cache=true
-
-    - name: Installs Rip Grep
-      apt: pkg=ripgrep state=installed update_cache=true
-
-    - name: Installs Vim
-      apt: pkg=vim state=installed update_cache=true
-
-    - name: Installs Neovim
-      apt: pkg=neovim state=installed update_cache=true
-
-    - name: Installs Homesick
-      apt: pkg=homesick state=installed update_cache=true
-
-
-  - name: Installs thefuck web server
-    apt: pkg=thefuck state=installed update_cache=true
-
-  - name: Installs Locate
-    apt: pkg=mlocate state=installed update_cache=true
-
-
-
-    - name: Installs OMF "oh my fish"
-      get_url:
-          url: "https://github.com/oh-my-fish/oh-my-fish/raw/master/bin/install"
-          dest: "tools/omf.install"
-
-    - name: Run Fish install and omf install
       apt:
         pkg: fish
         state: installed
         update_cache: true
 
+    - name: Installs Rip Grep
+      apt:
+        pkg: ripgrep 
+        state: installed
+        update_cache: true
+
+    - name: Installs Neovim
+      apt:
+        pkg: neovim
+        state: installed
+        update_cache: true
+
+    - name: Installs Homesick
+      apt:
+        pkg: homesick
+        state: installed
+        update_cache: true
+
+    - name: Installs Locate
+      apt:
+        pkg: mlocate
+        state: installed
+        update_cache: true
+
+    - name: Installs OMF "oh my fish"
+      get_url:
+        url: "https://raw.githubusercontent.com/oh-my-fish/oh-my-fish/master/bin/install"
+        dest: "tools/omf.install"
+
     - name: Install Oh my fish
       shell: fish tools/omf.install --noninteractive
 
-          # - name: set fish as default shell
-          # shell: chsh -s /root/bin/fish
-          #     - name: set fish as default shell
-          #       shell: chsh -s /root/bin/fish
+    - name: set fish as default shell
+      shell: chsh -s /root/bin/fish
 
-          # - name: Make fish run?!
-          #   raw: ps aux | grep fish
+    # - name: Make fish run?!
+    #   raw: ps aux | grep fish
 
-          #- name: Install thefuck with Omf
-          #  shell: omf install thefuck
+    # - name: Install thefuck with Omf
+    #   raw: omf install thefuck
 
     - name: Installs Git
-      apt: pkg=git state=installed update_cache=true
-
+      apt:
+        pkg: git
+        state: installed
+        update_cache: true
 
     - name: Build locate database
-      raw: sudo updatedb
+      shell: sudo updatedb
