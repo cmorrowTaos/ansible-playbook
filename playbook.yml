@@ -1,123 +1,84 @@
 ---
+
 - hosts: all
   become: yes
   gather_facts: False
 
 
-  pre_tasks:
-    - name: Install python for Ansible
-      raw: test -e /usr/bin/python || (apt -y update && apt install -y python python-simplejson)
-      changed_when: False
-
   tasks:
+    - name: Update CA Certs
+      apt: pkg=ca-certificates state=installed update_cache=true
+
+    - name: Create tooling directory for rest of the scripts
+      file:
+        path: tools
+        state: directory
+        mode: 0755
+
+    - name: Update the apt registry
+      raw: apt update -y
+
+    - name: Installs Vim
+      apt:
+        pkg: vim
+        state: present
+        update_cache: true
+
     - name: Installs thefuck
-      become: yes
       apt: pkg=thefuck state=installed update_cache=true
 
     - name: Inserting a line after a pattern in Ansible example
       lineinfile:
         dest: ~/.bashrc
         state: present
+        regexp: fuck
         line: |
           eval $(thefuck --alias)
           eval $(thefuck --alias FUCK)
-        regexp: fuck
 
-    - name: Installs Fish
-      become: yes
-      apt: pkg=fish state=installed update_cache=true
-
-    - name: Installs Vim
-      become: yes
-      apt: pkg=vim state=installed update_cache=true
-
-          # - name: Installs Z web server
-          # become: yes
-          # apt: pkg=z state=installed update_cache=true
-
-          # - name: Installs Rip Grep
-          # become: yes
-          # apt: pkg=ripgrep state=installed update_cache=true
+    - name: Installs Rip Grep
+      apt: pkg=ripgrep state=installed update_cache=true
 
 
-          # - name: Installs Neovim
-          # become: yes
-          # apt: pkg=neovim state=installed update_cache=true
+    - name: Installs Neovim
+      apt: pkg=neovim state=installed update_cache=true
 
-          # - name: Installs Homesick
-          #   become: yes
-          #   apt: pkg=homesick state=installed update_cache=true
+    - name: Installs Locate
+      apt: pkg=mlocate state=installed update_cache=true
 
-          # #    - name: Installs OMF "oh my fish"
-          # #      become: yes
-          # #      apt: pkg=omf state=installed update_cache=true
-          #     - name: Update CA Certs
-          #       apt: pkg=ca-certificates state=installed update_cache=true
-
-          #     - name: Create tooling directory for rest of the scripts
-          #       file:
-          #         path: ./tools
-          #         state: directory
-          #         mode: 0755
-
-          #     - name: Installs thefuck web server
-          #       apt: pkg=thefuck state=installed update_cache=true
-
-          #     - name: Installs Locate
-          #       apt: pkg=mlocate state=installed update_cache=true
+    - name: Installs Homesick
+      apt: pkg=homesick state=installed update_cache=true
 
 
-          #     # - name: Activation of thefuck for bash alias
-          #     #   lineinfile:
-          #     #     path: ~/.bashrc
-          #     #     line: |
-          #     #       eval $(thefuck --alias)
-          #     #       eval $(thefuck --alias FUCK)
+    - name: Installs Z
+      get_url:
+        url: "https://raw.githubusercontent.com/rupa/z/master/z.sh"
+        dest: "tools/z.sh"
 
-          #     - name: Installs Z
-          #       get_url:
-          #         url: "https://raw.githubusercontent.com/rupa/z/master/z.sh"
-          #         dest: "/tools/z.sh"
-
-          #     - name: Activation of z for bash
-          #       lineinfile:
-          #         dest: /root/.bashrc
-          #         line: '/tools/z.sh'
-          #         regexp: 'z\.sh'
-          #         owner: root
-          #         group: root
-          #         mode: 0644
+    - name: Activation of z for bash
+      lineinfile:
+        dest: /root/.bashrc
+        line: 'tools/z.sh'
+        regexp: 'z\.sh'
+        owner: root
+        group: root
+        mode: 0644
 
 
-          #     - name: Installs Fish
-          #       apt: pkg=fish state=installed update_cache=true
+    - name: Installs OMF "oh my fish"
+      get_url:
+          url: "https://github.com/oh-my-fish/oh-my-fish/raw/master/bin/install"
+          dest: "tools/omf.install"
 
-          #     - name: Installs Rip Grep
-          #       apt: pkg=ripgrep state=installed update_cache=true
-
-          #     - name: Installs Vim
-          #       apt: pkg=vim state=installed update_cache=true
-
-
-          #     - name: Installs Neovim
-          #       get_url:
-          #           url: "https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage"
-          #           dest: "/tools/z.sh"
+    - name: Run Fish install and omf install
+      apt:
+        pkg: fish
+        state: installed
+        update_cache: true
 
 
-          #     - name: Installs OMF "oh my fish"
-          #       get_url:
-          #         url: "https://github.com/oh-my-fish/oh-my-fish/raw/master/bin/install"
-          #         dest: "/tools/omf.install"
-
-          #     - name: Run Fish install and omf install
-          #       shell: apt install fish
-
-          #     - name: Install Oh my fish
-          #       shell: fish /tools/omf.install --noninteractive
-
-          #     - name: set fish as default shell
-          #       shell: chsh -s /root/bin/fish
+          # - name: set fish as default shell
+          # shell: chsh -s /root/bin/fish
 
 
           #     - name: Installs Git
@@ -126,8 +87,6 @@
           # - name: Make fish run?!
           #   raw: ps aux | grep fish
 
-          ## at this point were still in bash
-          ## need to be in fish
           #- name: Install Z with Omf
           #  shell: omf install z
 
@@ -142,6 +101,6 @@
 
           #- name: Install pipenv
           #  shell: apt install pipenv
-          #    #
-          #- name: Build locate database
-          #  raw: updatedb
+
+    - name: Build locate database
+      raw: sudo updatedb
