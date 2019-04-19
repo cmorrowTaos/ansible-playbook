@@ -1,16 +1,17 @@
 ---
 
 - hosts: all
-  become: yes
   gather_facts: False
 
 
   tasks:
 
     - name: Update the apt registry
+      become: yes
       raw: apt update -y
 
     - name: Update CA Certs
+      become: yes
       apt: pkg=ca-certificates state=installed update_cache=true
 
     - name: Create tooling directory for rest of the scripts
@@ -19,59 +20,28 @@
         state: directory
         mode: 0755
 
-    - name: Installs Vim
+
+    - name: Installs Git
+      become: yes
       apt:
-        pkg: vim
+        pkg: git,build-essential,curl,file,linuxbrew-wrapper
         state: present
         update_cache: true
 
-    - name: Installs thefuck web server
+    - name: Installs apt packages Part 1
+      become: yes
       apt:
-        pkg: thefuck
+        pkg: vim,thefuck,git,fish,neovim,ripgrep,mlocate
+        state: present
+        update_cache: true
+
+    - name: Installs apt packages part 2
+      become: yes
+      apt:
+        pkg: build-essential,curl,file,linuxbrew-wrapper,homesick
         state: installed
         update_cache: true
 
-    - name: Inserting a line after a pattern in Ansible example
-      lineinfile:
-        path: ~/.bashrc
-        line: |
-          eval $(thefuck --alias)
-          eval $(thefuck --alias FUCK)
-
-    - name: Installs Z
-      get_url:
-        url: "https://raw.githubusercontent.com/rupa/z/master/z.sh"
-        dest: "tools/z.sh"
-
-    - name: Installs Fish
-      apt:
-        pkg: fish
-        state: installed
-        update_cache: true
-
-    - name: Installs Rip Grep
-      apt:
-        pkg: ripgrep 
-        state: installed
-        update_cache: true
-
-    - name: Installs Neovim
-      apt:
-        pkg: neovim
-        state: installed
-        update_cache: true
-
-    - name: Installs Homesick
-      apt:
-        pkg: homesick
-        state: installed
-        update_cache: true
-
-    - name: Installs Locate
-      apt:
-        pkg: mlocate
-        state: installed
-        update_cache: true
 
     - name: Installs OMF "oh my fish"
       get_url:
@@ -81,20 +51,16 @@
     - name: Install Oh my fish
       shell: fish tools/omf.install --noninteractive
 
-    - name: set fish as default shell
-      shell: chsh -s /root/bin/fish
+    # - name: set fish as default shell
+    #   shell: chsh -s /root/bin/fish
 
-    # - name: Make fish run?!
-    #   raw: ps aux | grep fish
+    - name: Install homebrew dependencies
+      homebrew:
+        name: fzf,z,black
+        state: latest
 
-    # - name: Install thefuck with Omf
-    #   raw: omf install thefuck
-
-    - name: Installs Git
-      apt:
-        pkg: git
-        state: installed
-        update_cache: true
+    # # - name: Install thefuck with Omf
+    # #   raw: omf install thefuck
 
     - name: Build locate database
       shell: sudo updatedb
